@@ -8,9 +8,6 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-console.log(process.env.USER_NAME);
-console.log(process.env.USER_PASS);
-
 const uri =
   "mongodb+srv://BestPetStore:Z7WPndDoT7SIxUR6@cluster0.jsryxpo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
@@ -26,6 +23,18 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+    const coffeeCollection = client.db("DBuser").collection("coffees");
+    app.post("/coffees", async(req, res) => {
+        const user = req.body;
+        console.log(user);
+        const result = await coffeeCollection.insertOne(user);
+        res.send(result);
+      })
+
+      app.get("/coffees", async(req, res) => {
+        
+      })
+
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
