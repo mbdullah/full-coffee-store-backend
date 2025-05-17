@@ -24,6 +24,7 @@ async function run() {
   try {
     await client.connect();
     const coffeeCollection = client.db("DBuser").collection("coffees");
+    const usersCollection = client.db("DBuser").collection("users")
 
     app.get("/coffees", async(req, res) => {
         const result = await coffeeCollection.find().toArray();
@@ -39,7 +40,6 @@ async function run() {
 
     app.post("/coffees", async(req, res) => {
         const user = req.body;
-        console.log(user);
         const result = await coffeeCollection.insertOne(user);
         res.send(result);
       })
@@ -62,6 +62,27 @@ async function run() {
         const result = await coffeeCollection.deleteOne(query);
         res.send(result);
       })
+
+      //? Users Api Store : =====>
+
+        app.get("/users", async(req, res) => {
+          const result = await usersCollection.find().toArray();
+          res.send(result);
+        })
+
+        app.post("/users", async(req, res)=> {
+          const user = req.body;
+          console.log(user);
+          const result = await usersCollection.insertOne(user);
+          res.send(result);
+        })
+
+        app.delete("/users/:id", async(req, res) => {
+          const id = req.params.id;
+          const query = {_id : new ObjectId(id)}
+          const result = await usersCollection.deleteOne(query);
+          res.send(result);
+        })
 
       
 
